@@ -39,5 +39,25 @@ ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.DemoApplication"]
 By using this method, we have container with same size of ~ `122 MB` but the only difference is that in this way, our initialization of application is faster and optimized.
 
 
+## More optimization by using JRE 
+ 
+ Another point to improve our docker image is by using a proper image. Here, we can use jre to use a leightweight image of java.
+ 
+ ```
+FROM openjdk:8-jre-alpine
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+ARG DEPENDENCY=./build/dependency
+COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY ${DEPENDENCY}/META-INF /app/META-INF
+COPY ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.DemoApplication"]
+ ```
+ 
+ After this improvement, the image size is equal to ~ `102 MB`
+ 
+ 
+
+
 
 
